@@ -10,6 +10,8 @@ public class Knn  extends PixelManager {
 	
 	public Knn(BufferedImage i) {
 		super(i);
+		int aa;
+		aa++;
 	}
 
 
