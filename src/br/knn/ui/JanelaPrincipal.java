@@ -2,23 +2,13 @@ package br.knn.ui;
 
 
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.EventQueue;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 import javax.swing.JDesktopPane;
@@ -30,7 +20,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 
-import br.knn.Classes;
+import br.knn.Classe;
+import br.knn.Knn;
 
 
 public class JanelaPrincipal extends JFrame {
@@ -39,29 +30,37 @@ public class JanelaPrincipal extends JFrame {
 
 	ArrayList<Point> pontos = new ArrayList<Point>();
 	
+	public void clickKNN() {
+		Knn knn = new Knn( getImage(), Classe.MAR );
+		knn.setN( 3 );
+		knn.init();
+		knn.execute();
+		mostraImagem( knn.geraImagem() );
+	}
+	
 	public void clickLimpaPontos() {
-		String px = "x = {";
-		String py = "y = {";
+		String px = "int x[] = { ";
+		String py = "int y[] = {";
 		for( Point p : pontos ) {
+			//px += "new Point(" + p.x + "," + p.y + "), ";
 			px += p.x + ", ";
 			py += p.y + ", ";
 		}
 		px += "}";
 		py += "}";
 		String str = px + "  " + py;
-		//JOptionPane.showInternalInputDialog( this, "Copie:", "", messageType)
-		JOptionPane.showInputDialog("oi", str );
-		//JOptionPane.showMessageDialog(this, str );
+		//String str = px ;
+		JOptionPane.showInputDialog("Copie: ", str );
 		TelaInterna ti = ( TelaInterna )contentPane.getSelectedFrame();
 		ti.pintaImagem();
 	}
 	
 	public void clickDefinePontos() {
 		TelaInterna ti = ( TelaInterna )contentPane.getSelectedFrame();
+		pontos.clear();
 		//ArrayList<Point> lista = new ArrayList<Point>();
-		ti.registraPonto(10, pontos, Color.BLUE );
+		ti.registraPonto(30, pontos, Color.RED );
 		//JOptionPane.showMessageDialog( this, "aa = " + Classes.MONTANHA );
-		
 	}
 	
 	
@@ -173,6 +172,14 @@ public class JanelaPrincipal extends JFrame {
 			}
 		});
 		mnProcessamento.add(mntmLimpapontos);
+		
+		JMenuItem mntmKnn = new JMenuItem("KNN");
+		mntmKnn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clickKNN();
+			}
+		});
+		mnProcessamento.add(mntmKnn);
 		contentPane = new JDesktopPane();
 		contentPane.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
