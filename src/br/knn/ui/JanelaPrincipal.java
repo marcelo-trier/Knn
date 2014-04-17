@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -18,18 +20,31 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.border.EmptyBorder;
 
 import br.knn.Classe;
 import br.knn.Knn;
-import br.knn.PixelKnn;
+import br.knn.Knn.KNNTypes;
 
 
 public class JanelaPrincipal extends JFrame {
 
 	private JDesktopPane contentPane;
+	private ButtonGroup group;
 
 	ArrayList<Point> pontos = new ArrayList<Point>();
+	
+	public void clickTeste() {
+		ButtonModel bm = group.getSelection();
+		if( bm == null )
+			return;
+		KNNTypes umTipo[] = ( KNNTypes[] )bm.getSelectedObjects();
+		if( umTipo == null )
+			return;
+		String str = "escolha = " + umTipo[ 0 ].ordinal();
+		JOptionPane.showMessageDialog(this, str );
+	}
 	
 	public void clickMostrePontos() {
 		//Point p = new Point( 0, 0 );
@@ -49,8 +64,12 @@ public class JanelaPrincipal extends JFrame {
 	}
 	
 	public void clickKNN() {
-		Knn knn = new Knn( getImage(), Classe.AREIA );
-		knn.setN( 5 );
+		clickKNN( Classe.MONTANHA );
+	}
+	
+	public void clickKNN( Classe umaClasse  ) {
+		Knn knn = new Knn( getImage(), umaClasse );
+		knn.setN( 3 );
 		knn.init();
 		knn.execute();
 		mostraImagem( knn.geraImagem() );
@@ -172,6 +191,14 @@ public class JanelaPrincipal extends JFrame {
 		JMenu mnImagens = new JMenu("Imagens");
 		menuBar.add(mnImagens);
 		
+		JMenuItem mntmTeste = new JMenuItem("Teste");
+		mntmTeste.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clickTeste();
+			}
+		});
+		mnImagens.add(mntmTeste);
+		
 		JMenu mnProcessamento = new JMenu("Processamento");
 		menuBar.add(mnProcessamento);
 		
@@ -206,6 +233,66 @@ public class JanelaPrincipal extends JFrame {
 		});
 		mnProcessamento.add(mntmMostrePontos);
 		mnProcessamento.add(mntmKnn);
+		
+		JMenu menuKnnConfig = new JMenu("KNN Config");
+		mnProcessamento.add(menuKnnConfig);
+		
+		
+		JRadioButtonMenuItem menuConfig;
+		group = new ButtonGroup();
+		boolean selected = false;
+		for( Knn.KNNTypes tipoKnn : Knn.KNNTypes.values() ) {
+			menuConfig = new JRadioButtonMenuItem( tipoKnn.name() );
+			menuKnnConfig.add( menuConfig );
+		    group.add( menuConfig );
+		    if( !selected )
+		    	menuConfig.setSelected( true );
+
+		    selected = true;
+		}
+
+		/*
+		menuKnn3 = new JRadioButtonMenuItem("KNN 3");
+		menuKnn3.setSelected(true);
+		menuKnnConfig.add(menuKnn3);
+		
+		menuKnn5 = new JRadioButtonMenuItem("KNN 5");
+		menuKnnConfig.add(menuKnn5);
+		
+		menuKnn7 = new JRadioButtonMenuItem("KNN 7");
+		menuKnnConfig.add(menuKnn7);
+		
+		menuKnn9 = new JRadioButtonMenuItem("KNN 9");
+		menuKnnConfig.add(menuKnn9);
+		
+		menuKnn11 = new JRadioButtonMenuItem("KNN 11");
+		menuKnnConfig.add(menuKnn11);
+		
+
+	    group.add(rightJustify);
+	    group.add(centerJustify);
+	    group.add(fullJustify);
+*/
+		
+		JMenu mnKnn = new JMenu("KNN (??)");
+		mnProcessamento.add(mnKnn);
+		
+		
+		Classe asClasses[] = Classe.values();
+		JMenuItem umMenu;
+		for( Classe umaClasse : asClasses ) {
+			umMenu = new JMenuItem( umaClasse.name() );
+			umMenu.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					for( Classe umaClasse : Classe.values() ) {
+						if( e.getActionCommand().equals( umaClasse.toString() ) )
+							clickKNN( umaClasse );
+					}
+				}
+			});
+			mnKnn.add( umMenu );
+		}
+		
 		contentPane = new JDesktopPane();
 		contentPane.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

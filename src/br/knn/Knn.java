@@ -16,6 +16,19 @@ public class Knn  extends PixelManager {
 	ArrayList<PixelKnn> negativos = new ArrayList<PixelKnn>();
 	Classe classePositiva;
 	int N = 1;
+	public static enum KNNTypes {
+		KNN3(3),
+		KNN5(5),
+		KNN7(7),
+		KNN9(9),
+		KNN11(11);
+		int valor = 0;
+		KNNTypes( int vlr ) {
+			valor = vlr;
+		}
+		
+	};
+	
 //	BufferedImage outImg;
 	
 	public void setN( int n ) {
