@@ -9,8 +9,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.JDesktopPane;
@@ -36,13 +38,21 @@ public class JanelaPrincipal extends JFrame {
 	ArrayList<Point> pontos = new ArrayList<Point>();
 	
 	public void clickTeste() {
-		ButtonModel bm = group.getSelection();
-		if( bm == null )
+
+		Enumeration<AbstractButton> op = group.getElements();
+		AbstractButton item = null;
+		while( op.hasMoreElements() ) {
+			item = op.nextElement();
+			if( item.isSelected() )
+				break;
+		}
+		if( item == null )
 			return;
-		KNNTypes umTipo[] = ( KNNTypes[] )bm.getSelectedObjects();
-		if( umTipo == null )
-			return;
-		String str = "escolha = " + umTipo[ 0 ].ordinal();
+
+		KNNTypes t = KNNTypes.getType( item.getText() );
+
+		
+		String str = "escolha = " + t;
 		JOptionPane.showMessageDialog(this, str );
 	}
 	
@@ -251,45 +261,24 @@ public class JanelaPrincipal extends JFrame {
 		    selected = true;
 		}
 
-		/*
-		menuKnn3 = new JRadioButtonMenuItem("KNN 3");
-		menuKnn3.setSelected(true);
-		menuKnnConfig.add(menuKnn3);
-		
-		menuKnn5 = new JRadioButtonMenuItem("KNN 5");
-		menuKnnConfig.add(menuKnn5);
-		
-		menuKnn7 = new JRadioButtonMenuItem("KNN 7");
-		menuKnnConfig.add(menuKnn7);
-		
-		menuKnn9 = new JRadioButtonMenuItem("KNN 9");
-		menuKnnConfig.add(menuKnn9);
-		
-		menuKnn11 = new JRadioButtonMenuItem("KNN 11");
-		menuKnnConfig.add(menuKnn11);
-		
-
-	    group.add(rightJustify);
-	    group.add(centerJustify);
-	    group.add(fullJustify);
-*/
 		
 		JMenu mnKnn = new JMenu("KNN (??)");
 		mnProcessamento.add(mnKnn);
 		
+		ActionListener alMenu = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for( Classe umaClasse : Classe.values() ) {
+					if( e.getActionCommand().equals( umaClasse.toString() ) )
+						clickKNN( umaClasse );
+				}
+			}
+		};
 		
 		Classe asClasses[] = Classe.values();
 		JMenuItem umMenu;
 		for( Classe umaClasse : asClasses ) {
 			umMenu = new JMenuItem( umaClasse.name() );
-			umMenu.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					for( Classe umaClasse : Classe.values() ) {
-						if( e.getActionCommand().equals( umaClasse.toString() ) )
-							clickKNN( umaClasse );
-					}
-				}
-			});
+			umMenu.addActionListener( alMenu );
 			mnKnn.add( umMenu );
 		}
 		

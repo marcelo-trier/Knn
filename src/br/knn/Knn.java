@@ -16,6 +16,7 @@ public class Knn  extends PixelManager {
 	ArrayList<PixelKnn> negativos = new ArrayList<PixelKnn>();
 	Classe classePositiva;
 	int N = 1;
+
 	public static enum KNNTypes {
 		KNN3(3),
 		KNN5(5),
@@ -25,6 +26,14 @@ public class Knn  extends PixelManager {
 		int valor = 0;
 		KNNTypes( int vlr ) {
 			valor = vlr;
+		}
+		public static KNNTypes getType( String str ) {
+			for( KNNTypes t : KNNTypes.values() ) {
+				if( str == t.name() ) {
+					return t;
+				}
+			}
+			return null;
 		}
 		
 	};
