@@ -24,6 +24,10 @@ public class TelaInterna extends JInternalFrame {
 		panel.repaint();
 	}
 	
+	public void mostrePontos( int qtde, List<Point> lista, Color cor ) {
+		panel.mostrePontos( qtde, lista, cor );
+	}
+	
 	public void registraPonto( int qtde, List<Point> lista, Color cor ) {
 		panel.pegaPonto( qtde, lista, cor );
 	}
@@ -41,7 +45,7 @@ public class TelaInterna extends JInternalFrame {
 		int cantoX = 0, cantoY = 0;
 		cantoX = 50 * id;
 		cantoY = 50 * id;
-		setBounds(cantoX, cantoY, img.getWidth(), img.getHeight() );
+		setBounds(cantoX, cantoY, img.getWidth() + 15, img.getHeight() + 30 );
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		imagem = img;

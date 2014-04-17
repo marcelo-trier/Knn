@@ -32,6 +32,14 @@ public class ImagePanel extends JPanel implements MouseListener {
 		setImage( img );
 	}
 	
+	public void mostrePontos( int qtde, List<Point> l, Color c ) {
+		umaCor = c;
+		for( int i=0; i<qtde; i++ ) {
+			Point p = l.get( i );
+			drawPoint( p.x, p.y );
+		}
+	}
+	
 	public void pegaPonto( int qtde, List<Point> l, Color c ) {
 		this.setCursor(Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
 		numeroPontos = qtde;

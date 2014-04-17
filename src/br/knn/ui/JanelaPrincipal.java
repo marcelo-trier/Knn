@@ -22,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 
 import br.knn.Classe;
 import br.knn.Knn;
+import br.knn.PixelKnn;
 
 
 public class JanelaPrincipal extends JFrame {
@@ -30,9 +31,26 @@ public class JanelaPrincipal extends JFrame {
 
 	ArrayList<Point> pontos = new ArrayList<Point>();
 	
+	public void clickMostrePontos() {
+		//Point p = new Point( 0, 0 );
+		Classe classesPontos[] = Classe.values();
+		TelaInterna ti = ( TelaInterna )contentPane.getSelectedFrame();
+		for( int c=0; c<classesPontos.length; c++ ) { // for para todas as classes de pontos
+			int[] arrX = Classe.PONTOSX[ c ];
+			int[] arrY = Classe.PONTOSY[ c ];
+			int numeroPontos = arrX.length;
+			pontos.clear();
+			for( int i=0; i<numeroPontos; i++ ) { // para a classe em questão irá pegar 30 pontos... para as outras, vai pegar os 1os 10.
+				Point p = new Point( arrX[ i ], arrY[ i ] );
+				pontos.add( p );
+			}
+			ti.mostrePontos( 10, pontos, Classe.Cores[ c ] );
+		}
+	}
+	
 	public void clickKNN() {
-		Knn knn = new Knn( getImage(), Classe.MAR );
-		knn.setN( 3 );
+		Knn knn = new Knn( getImage(), Classe.AREIA );
+		knn.setN( 5 );
 		knn.init();
 		knn.execute();
 		mostraImagem( knn.geraImagem() );
@@ -179,6 +197,14 @@ public class JanelaPrincipal extends JFrame {
 				clickKNN();
 			}
 		});
+		
+		JMenuItem mntmMostrePontos = new JMenuItem("Mostre Pontos");
+		mntmMostrePontos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clickMostrePontos();
+			}
+		});
+		mnProcessamento.add(mntmMostrePontos);
 		mnProcessamento.add(mntmKnn);
 		contentPane = new JDesktopPane();
 		contentPane.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
