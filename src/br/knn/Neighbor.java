@@ -11,7 +11,7 @@ public class Neighbor implements Comparable<Neighbor> {
 	}
 	
 	public int compareTo(Neighbor o) { // retorna Neg se este eh MENOR... 0 se IGUAL... Posit. se MAIOR
-		double result = o.distancia - this.distancia; 
+		double result = this.distancia - o.distancia; 
 		if( result < 0 )
 			return -1;
 		else if( result > 0 )

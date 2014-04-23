@@ -37,8 +37,7 @@ public class JanelaPrincipal extends JFrame {
 
 	ArrayList<Point> pontos = new ArrayList<Point>();
 	
-	public void clickTeste() {
-
+	public KNNTypes getKnnType() {
 		Enumeration<AbstractButton> op = group.getElements();
 		AbstractButton item = null;
 		while( op.hasMoreElements() ) {
@@ -47,11 +46,16 @@ public class JanelaPrincipal extends JFrame {
 				break;
 		}
 		if( item == null )
-			return;
+			return null;
 
 		KNNTypes t = KNNTypes.getType( item.getText() );
+		return t;
+	}
+	
+	public void clickTeste() {
 
-		
+		KNNTypes t = getKnnType();
+
 		String str = "escolha = " + t;
 		JOptionPane.showMessageDialog(this, str );
 	}
@@ -69,7 +73,7 @@ public class JanelaPrincipal extends JFrame {
 				Point p = new Point( arrX[ i ], arrY[ i ] );
 				pontos.add( p );
 			}
-			ti.mostrePontos( 10, pontos, Classe.Cores[ c ] );
+			ti.mostrePontos( 30, pontos, Classe.Cores[ c ] );
 		}
 	}
 	
@@ -79,7 +83,9 @@ public class JanelaPrincipal extends JFrame {
 	
 	public void clickKNN( Classe umaClasse  ) {
 		Knn knn = new Knn( getImage(), umaClasse );
-		knn.setN( 3 );
+		KNNTypes t = getKnnType();
+		knn.setN( t );
+		//knn.setN( 3 );
 		knn.init();
 		knn.execute();
 		mostraImagem( knn.geraImagem() );

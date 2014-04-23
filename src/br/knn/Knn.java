@@ -40,8 +40,12 @@ public class Knn  extends PixelManager {
 	
 //	BufferedImage outImg;
 	
-	public void setN( int n ) {
+	public void setN_old( int n ) {
 		N = n;
+	}
+	
+	public void setN( KNNTypes umT ) {
+		N = umT.valor;
 	}
 	
 	public Knn(BufferedImage i, Classe c ) {
