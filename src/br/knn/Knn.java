@@ -50,9 +50,15 @@ public class Knn  extends PixelManager {
 	
 	public Knn(BufferedImage i, Classe c ) {
 		super(i);
-		classePositiva = c;
+		init();
+		setClasse( c );
 	}
 
+	private void setClasse( Classe c ) {
+		classePositiva = c;
+		carregaPontosClasse();
+	}
+	
 	public void carregaPontosClasse() {
 		Point p = new Point( 0, 0 );
 		PixelKnn pk;
@@ -91,7 +97,6 @@ public class Knn  extends PixelManager {
 
 	public void init() {
 		percorraTodosPixels();
-		carregaPontosClasse();
 	}
 
 	public void execute() {
@@ -135,8 +140,8 @@ public class Knn  extends PixelManager {
 				umPixel[ 0 ] = cor.getRed();
 				umPixel[ 1 ] = cor.getGreen();
 				umPixel[ 2 ] = cor.getBlue();
+				outRaster.setPixel( pk.x, pk.y, umPixel );
 			}
-			outRaster.setPixel( pk.x, pk.y, umPixel );
 		}
 		
 		return outImg;

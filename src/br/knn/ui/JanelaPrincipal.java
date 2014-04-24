@@ -36,7 +36,33 @@ public class JanelaPrincipal extends JFrame {
 	private ButtonGroup group;
 
 	ArrayList<Point> pontos = new ArrayList<Point>();
-	
+
+	public void clickKnnTotal() {
+		KNNTypes umTipo = getKnnType();
+		BufferedImage img = getImage();
+		BufferedImage imgResult[] = new BufferedImage[ Classe.values().length ];
+		Knn umKnn[] = new Knn[ Classe.values().length ];
+		
+		for( int i=0; i<4; i++ ) {
+			Classe c = Classe.values()[ i ];
+			umKnn[ i ] = new Knn( img, c );
+			umKnn[ i ].setN( umTipo );
+			umKnn[ i ].execute();
+			imgResult[ i ] = umKnn[ i ].geraImagem();
+		}
+		BufferedImage oResult = mix( imgResult );
+	}
+
+	public void clickKNN( Classe umaClasse  ) {
+		Knn knn = new Knn( getImage(), umaClasse );
+		KNNTypes t = getKnnType();
+		knn.setN( t );
+		//knn.setN( 3 );
+		//knn.init();
+		knn.execute();
+		mostraImagem( knn.geraImagem() );
+	}
+
 	public KNNTypes getKnnType() {
 		Enumeration<AbstractButton> op = group.getElements();
 		AbstractButton item = null;
@@ -75,20 +101,6 @@ public class JanelaPrincipal extends JFrame {
 			}
 			ti.mostrePontos( 30, pontos, Classe.Cores[ c ] );
 		}
-	}
-	
-	public void clickKNN() {
-		clickKNN( Classe.MONTANHA );
-	}
-	
-	public void clickKNN( Classe umaClasse  ) {
-		Knn knn = new Knn( getImage(), umaClasse );
-		KNNTypes t = getKnnType();
-		knn.setN( t );
-		//knn.setN( 3 );
-		knn.init();
-		knn.execute();
-		mostraImagem( knn.geraImagem() );
 	}
 	
 	public void clickLimpaPontos() {
@@ -234,13 +246,6 @@ public class JanelaPrincipal extends JFrame {
 		});
 		mnProcessamento.add(mntmLimpapontos);
 		
-		JMenuItem mntmKnn = new JMenuItem("KNN");
-		mntmKnn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				clickKNN();
-			}
-		});
-		
 		JMenuItem mntmMostrePontos = new JMenuItem("Mostre Pontos");
 		mntmMostrePontos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -248,7 +253,6 @@ public class JanelaPrincipal extends JFrame {
 			}
 		});
 		mnProcessamento.add(mntmMostrePontos);
-		mnProcessamento.add(mntmKnn);
 		
 		JMenu menuKnnConfig = new JMenu("KNN Config");
 		mnProcessamento.add(menuKnnConfig);
@@ -270,6 +274,14 @@ public class JanelaPrincipal extends JFrame {
 		
 		JMenu mnKnn = new JMenu("KNN (??)");
 		mnProcessamento.add(mnKnn);
+		
+		JMenuItem mntmKnnTotal = new JMenuItem("KNN Total");
+		mntmKnnTotal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clickKnnTotal();
+			}
+		});
+		mnProcessamento.add(mntmKnnTotal);
 		
 		ActionListener alMenu = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
