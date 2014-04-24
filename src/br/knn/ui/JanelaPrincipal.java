@@ -6,6 +6,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +39,33 @@ public class JanelaPrincipal extends JFrame {
 
 	ArrayList<Point> pontos = new ArrayList<Point>();
 
+	public BufferedImage mix( BufferedImage imgArr[] ) {
+		int w = imgArr[ 0 ].getWidth();
+		int h = imgArr[ 0 ].getHeight();
+		BufferedImage out = new BufferedImage( w, h, imgArr[0].getType() );
+		WritableRaster outRaster = out.getRaster();		
+		int[] pix = { 0, 0, 0, 255 };
+		for( BufferedImage img : imgArr ) {
+			Raster raster = img.getData();
+			try {
+			for( int y=0; y<h; y++ ) {
+				for( int x=0; x<w; x++ ) {
+					pix = raster.getPixel( x, y, pix );
+					int soma = pix[0]+pix[1]+pix[2];
+					if( soma > 5 )
+						outRaster.setPixel( x, y, pix );
+				}
+			}
+			
+			} catch( Exception ex ) {
+				int aa = 0;
+				aa++;
+			}			
+		}
+		
+		return out;
+	}
+	
 	public void clickKnnTotal() {
 		KNNTypes umTipo = getKnnType();
 		BufferedImage img = getImage();
@@ -50,9 +79,15 @@ public class JanelaPrincipal extends JFrame {
 			umKnn[ i ].execute();
 			imgResult[ i ] = umKnn[ i ].geraImagem();
 		}
-		BufferedImage oResult = mix( imgResult );
-	}
+		mostraImagem( imgResult[ 0 ] );
+		mostraImagem( imgResult[ 1 ] );
+		mostraImagem( imgResult[ 2 ] );
+		mostraImagem( imgResult[ 3 ] );
 
+		BufferedImage oResult = mix( imgResult );
+		mostraImagem( oResult );
+	}
+	
 	public void clickKNN( Classe umaClasse  ) {
 		Knn knn = new Knn( getImage(), umaClasse );
 		KNNTypes t = getKnnType();
