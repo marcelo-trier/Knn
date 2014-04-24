@@ -12,6 +12,8 @@ import java.util.List;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 
+import br.knn.Classe;
+
 
 public class TelaInterna extends JInternalFrame {
 	static int contadorJanela = 0;
@@ -19,17 +21,21 @@ public class TelaInterna extends JInternalFrame {
 	private ImagePanel panel;
 	public BufferedImage imagem = null;
 	
+	public void atualizaPontos() {
+		panel.adicionaPontos = true;
+	}
+	
 	public void pintaImagem() {
 		panel.setImage( imagem );
 		panel.repaint();
 	}
 	
-	public void mostrePontos( int qtde, List<Point> lista, Color cor ) {
-		panel.mostrePontos( qtde, lista, cor );
+	public void mostrePontos( int qtde, List<Point> lista, Classe aClasse ) {
+		panel.mostrePontos( qtde, lista, aClasse );
 	}
 	
-	public void registraPonto( int qtde, List<Point> lista, Color cor ) {
-		panel.pegaPonto( qtde, lista, cor );
+	public void registraPonto( int qtde, List<Point> lista, Classe aClasse ) {
+		panel.pegaPonto( qtde, lista, aClasse );
 	}
 	
 	public TelaInterna(BufferedImage img ) {

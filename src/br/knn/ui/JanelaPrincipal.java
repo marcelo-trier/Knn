@@ -88,6 +88,15 @@ public class JanelaPrincipal extends JFrame {
 		mostraImagem( oResult );
 	}
 	
+//	public void clickArmazenaPontos() {}
+	
+	public void clickDefinePontos( Classe umaC ) {
+		TelaInterna ti = ( TelaInterna )contentPane.getSelectedFrame();
+		pontos.clear();
+		ti.registraPonto(30, pontos, umaC );
+		ti.atualizaPontos();
+	}
+	
 	public void clickKNN( Classe umaClasse  ) {
 		Knn knn = new Knn( getImage(), umaClasse );
 		KNNTypes t = getKnnType();
@@ -134,11 +143,17 @@ public class JanelaPrincipal extends JFrame {
 				Point p = new Point( arrX[ i ], arrY[ i ] );
 				pontos.add( p );
 			}
-			ti.mostrePontos( 30, pontos, Classe.Cores[ c ] );
+			ti.mostrePontos( 30, pontos, classesPontos[ c ] );
 		}
 	}
 	
 	public void clickLimpaPontos() {
+		TelaInterna ti = ( TelaInterna )contentPane.getSelectedFrame();
+		ti.pintaImagem();
+		pontos.clear();
+	}
+	
+	public void clickLimpaPontos__OLD() {
 		String px = "int x[] = { ";
 		String py = "int y[] = {";
 		for( Point p : pontos ) {
@@ -155,11 +170,11 @@ public class JanelaPrincipal extends JFrame {
 		ti.pintaImagem();
 	}
 	
-	public void clickDefinePontos() {
+	public void clickDefinePontos__OLD() {
 		TelaInterna ti = ( TelaInterna )contentPane.getSelectedFrame();
 		pontos.clear();
 		//ArrayList<Point> lista = new ArrayList<Point>();
-		ti.registraPonto(30, pontos, Color.RED );
+		ti.registraPonto(30, pontos, Classe.AREIA );
 		//JOptionPane.showMessageDialog( this, "aa = " + Classes.MONTANHA );
 	}
 	
@@ -265,20 +280,15 @@ public class JanelaPrincipal extends JFrame {
 		JMenu mnProcessamento = new JMenu("Processamento");
 		menuBar.add(mnProcessamento);
 		
-		JMenuItem mntmDefinepontos = new JMenuItem("DefinePontos");
-		mntmDefinepontos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				clickDefinePontos();
-			}
-		});
-		mnProcessamento.add(mntmDefinepontos);
-		
 		JMenuItem mntmLimpapontos = new JMenuItem("LimpaPontos");
 		mntmLimpapontos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clickLimpaPontos();
 			}
 		});
+		
+		JMenu mnDefineClassePontos = new JMenu("Define Pontos(Classe)");
+		mnProcessamento.add(mnDefineClassePontos);
 		mnProcessamento.add(mntmLimpapontos);
 		
 		JMenuItem mntmMostrePontos = new JMenuItem("Mostre Pontos");
@@ -327,12 +337,28 @@ public class JanelaPrincipal extends JFrame {
 			}
 		};
 		
+		ActionListener acaoMenuPontos = new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				for( Classe umaC : Classe.values() ) {
+					if( e.getActionCommand().equals( umaC.toString() ) )
+						clickDefinePontos( umaC );
+				}
+			}
+		};
+		
 		Classe asClasses[] = Classe.values();
 		JMenuItem umMenu;
+		JMenuItem menuPontos;
 		for( Classe umaClasse : asClasses ) {
 			umMenu = new JMenuItem( umaClasse.name() );
 			umMenu.addActionListener( alMenu );
 			mnKnn.add( umMenu );
+			
+			menuPontos = new JMenuItem( umaClasse.name() );
+			menuPontos.addActionListener( acaoMenuPontos );
+			mnDefineClassePontos.add( menuPontos );
+			
 		}
 		
 		contentPane = new JDesktopPane();

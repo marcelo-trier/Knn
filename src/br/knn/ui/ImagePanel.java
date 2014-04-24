@@ -12,12 +12,16 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import br.knn.Classe;
+
 public class ImagePanel extends JPanel implements MouseListener {
 
 	BufferedImage imagem = null;
 	int numeroPontos = 0;
 	List<Point> umaLista;
-	Color umaCor = Color.WHITE;
+	//Color umaCor = Color.WHITE;
+	Classe aClasse = Classe.MONTANHA;
+	boolean adicionaPontos = false;
 	
 	
 	public void setImage( BufferedImage img ) {
@@ -32,19 +36,24 @@ public class ImagePanel extends JPanel implements MouseListener {
 		setImage( img );
 	}
 	
-	public void mostrePontos( int qtde, List<Point> l, Color c ) {
-		umaCor = c;
+	public void mostrePontos( int qtde, List<Point> l, Classe c ) {
+		aClasse = c;
+		//umaCor = Classe.Cores[ c.ordinal() ];
+		//umaCor = c;
 		for( int i=0; i<qtde; i++ ) {
 			Point p = l.get( i );
 			drawPoint( p.x, p.y );
 		}
 	}
 	
-	public void pegaPonto( int qtde, List<Point> l, Color c ) {
+	public void pegaPonto( int qtde, List<Point> l, Classe c ) {
 		this.setCursor(Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
 		numeroPontos = qtde;
 		umaLista = l;
-		umaCor = c;
+		umaLista.clear();
+		aClasse = c;
+		//umaCor = Classe.Cores[ aClasse.ordinal() ];
+		//umaCor = c;
 		this.addMouseListener( this );
 	}
 	
@@ -61,6 +70,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 
     public void drawPoint( int x, int y ) {
 	    Graphics2D g = imagem.createGraphics();
+	    Color umaCor = Classe.Cores[ aClasse.ordinal() ];
 	    g.setColor( umaCor );
 	    g.fillOval(x-5, y-5, 5, 5 ); // prá ficar no centro do click do mouse
 	    this.repaint();
@@ -76,6 +86,17 @@ public class ImagePanel extends JPanel implements MouseListener {
 		if( numeroPontos <= 0 ) {
 			this.setCursor(Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR ) );
 			this.removeMouseListener( this ); 
+			if( adicionaPontos ) {
+				adicionaPontos = false;
+				int ptsX[] = Classe.PONTOSX[ aClasse.ordinal() ];
+				int ptsY[] = Classe.PONTOSY[ aClasse.ordinal() ];
+				for( int i=0; i<ptsX.length; i++ ) {
+					Point pt = umaLista.get( i );
+					ptsX[ i ] = pt.x;
+					ptsY[ i ] = pt.y;
+				}
+				umaLista.clear();
+			}
 		}
 	}
 
