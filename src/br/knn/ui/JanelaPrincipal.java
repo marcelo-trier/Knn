@@ -30,6 +30,8 @@ import javax.swing.border.EmptyBorder;
 import br.knn.Classe;
 import br.knn.Knn;
 import br.knn.Knn.KNNTypes;
+import br.knn.Knn2;
+import br.knn.util.Classe2;
 
 
 public class JanelaPrincipal extends JFrame {
@@ -70,11 +72,11 @@ public class JanelaPrincipal extends JFrame {
 		KNNTypes umTipo = getKnnType();
 		BufferedImage img = getImage();
 		BufferedImage imgResult[] = new BufferedImage[ Classe.values().length ];
-		Knn umKnn[] = new Knn[ Classe.values().length ];
+		Knn2 umKnn[] = new Knn2[ Classe.values().length ];
 		
 		for( int i=0; i<4; i++ ) {
-			Classe c = Classe.values()[ i ];
-			umKnn[ i ] = new Knn( img, c );
+			Classe2 c = Classe2.values()[ i ];
+			umKnn[ i ] = new Knn2( img, c );
 			umKnn[ i ].setN( umTipo );
 			umKnn[ i ].execute();
 			imgResult[ i ] = umKnn[ i ].geraImagem();
@@ -95,6 +97,14 @@ public class JanelaPrincipal extends JFrame {
 		pontos.clear();
 		ti.registraPonto(30, pontos, umaC );
 		ti.atualizaPontos();
+	}
+	
+	public void clickKNN2( Classe2 umaClasse ) {
+		Knn2 k2 = new Knn2( getImage(), umaClasse );
+		KNNTypes t = getKnnType();
+		k2.setN( t );
+		k2.execute();
+		mostraImagem( k2.geraImagem() );
 	}
 	
 	public void clickKNN( Classe umaClasse  ) {
@@ -330,9 +340,9 @@ public class JanelaPrincipal extends JFrame {
 		
 		ActionListener alMenu = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for( Classe umaClasse : Classe.values() ) {
+				for( Classe2 umaClasse : Classe2.values() ) {
 					if( e.getActionCommand().equals( umaClasse.toString() ) )
-						clickKNN( umaClasse );
+						clickKNN2( umaClasse );
 				}
 			}
 		};

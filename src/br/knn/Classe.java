@@ -1,8 +1,6 @@
 package br.knn;
 
 import java.awt.Color;
-import java.awt.Point;
-
 
 public enum Classe {
 	MONTANHA(0),

@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class Knn  extends PixelManager {
